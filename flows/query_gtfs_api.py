@@ -97,7 +97,7 @@ def dbt_model():
     dbt_cli_profile = DbtCliProfile.load("dbt-cli-profile")
     
     with DbtCoreOperation(
-                    commands=["dbt debug"],
+                    commands=["dbt run"],
                     project_dir="/home/final/wmata_bus",
                     profiles_dir="/home/final/wmata_bus"
                     #,dbt_cli_profile = dbt_cli_profile # comment out if dbt asks for a dbt_cli_profile
