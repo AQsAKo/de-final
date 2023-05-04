@@ -9,6 +9,10 @@ This project aims to build an end-to-end orchestrated data pipeline. The pipelin
 ## Tech stack
 Docker, BigQuery, dbt, Looker Studio, Prefect
 
+## Questions
+Visualize all the routes
+Show buses distribution by time of day (in 10 minute buckets), GTFS time can include more than 24 hours
+
 ## Dashboard
 <p align="center">
 <img src="assets/dashboard.png" width="800">
