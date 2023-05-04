@@ -23,7 +23,14 @@ Show buses distribution by time of day (in 10 minute buckets), GTFS time can inc
 1. Set up a GCP Environment account with the service account and project. 
 2. Clone project ```git clone https://github.com/AQsAKo/de-final.git```
 3. Install Docker
-4. In project directory run `docker-compose build`
+4. Set variables ```bash
+    export GOOGLE_APPLICATION_CREDENTIALS=<path_to_serviceaccount_json>
+    export PREFECT_ACCOUNT_ID=<prefect-account-id>
+    export PREFECT_WORKSPACE_ID=<prefect-workspace-id>
+    export PREFECT_API_KEY=<prefect-key>
+    export WMATA_KEY=8e2f2e3134924ca49be865340270bed6
+    ```
+    In project directory run `docker-compose build`
 5. Start the built container with command `docker-compose run -rm prefect` 
     and initialize google cli with command `gcloud init` and login with your account and select project
 6. Execute Terraform code
