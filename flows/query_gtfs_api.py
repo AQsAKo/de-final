@@ -5,6 +5,7 @@ import argparse
 
 import requests
 import codecs
+import json
 from tqdm import tqdm
 import zipfile, io
 
@@ -75,7 +76,7 @@ def query_stops_json(api_key: str = os.environ['WMATA_KEY'], api_url: str = "htt
         print("[Requests error ]", e)
     
 @task(log_prints=True, name="Query Wmata API for bus stops data", retries=3)
-def load_to_bq()->None:
+def load_to_bq(extract_dir: Path="gtfs")->None:
     os.system(f'bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_00 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
     os.system(f'bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_01 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
 
