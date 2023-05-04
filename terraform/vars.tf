@@ -17,8 +17,3 @@ variable "zone" {
   type    = string
   default = null
 }
-variable "credentials" {
-  type = string
-  sensitive = true
-  description = "Google Cloud service account credentials"
-}

@@ -16,6 +16,7 @@ COPY terraform_1.4.6_linux_amd64.zip terraform_1.4.6_linux_amd64.zip
 RUN unzip terraform_1.4.6_linux_amd64.zip -d /usr/bin
 
 RUN pip install tqdm
+RUN PATH=/home/final/google-cloud-sdk/bin:$PATH
 
 COPY terraform terraform
 COPY flows flows

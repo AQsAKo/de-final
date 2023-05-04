@@ -77,13 +77,14 @@ def query_stops_json(api_key: str = os.environ['WMATA_KEY'], api_url: str = "htt
     
 @task(log_prints=True, name="Query Wmata API for bus stops data", retries=3)
 def load_to_bq(extract_dir: Path="gtfs")->None:
-    os.system(f'bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_00 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
-    os.system(f'bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_01 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
+    gcloud_bin = "/home/final/google-cloud-sdk/bin"
+    os.system(f'{gcloud_bin}/bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_00 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
+    os.system(f'{gcloud_bin}/bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_01 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
 
-    os.system(f'bq load --source_format=CSV --skip_leading_rows=1 --clustering_fields=shape_pt_sequence {project_id}:gtfs_static.shapes {extract_dir}/shapes.txt shape_id:STRING,shape_pt_lat:FLOAT,shape_pt_lon:FLOAT,shape_pt_sequence:NUMERIC,shape_dist_traveled:FLOAT')
-    os.system(f'bq load --source_format=CSV --skip_leading_rows=1 {project_id}:gtfs_static.stops {extract_dir}/stops.txt stop_id:NUMERIC,stop_code:INTEGER,stop_name:STRING,stop_desc:STRING,stop_lat:FLOAT,stop_lon:FLOAT,zone_id:NUMERIC,stop_url:STRING')
+    os.system(f'{gcloud_bin}/bq load --source_format=CSV --skip_leading_rows=1 --clustering_fields=shape_pt_sequence {project_id}:gtfs_static.shapes {extract_dir}/shapes.txt shape_id:STRING,shape_pt_lat:FLOAT,shape_pt_lon:FLOAT,shape_pt_sequence:NUMERIC,shape_dist_traveled:FLOAT')
+    os.system(f'{gcloud_bin}/bq load --source_format=CSV --skip_leading_rows=1 {project_id}:gtfs_static.stops {extract_dir}/stops.txt stop_id:NUMERIC,stop_code:INTEGER,stop_name:STRING,stop_desc:STRING,stop_lat:FLOAT,stop_lon:FLOAT,zone_id:NUMERIC,stop_url:STRING')
 
-    os.system(f'bq load  --source_format=NEWLINE_DELIMITED_JSON --autodetect {project_id}:gtfs_static.json stops.json')
+    os.system(f'{gcloud_bin}/bq load  --source_format=NEWLINE_DELIMITED_JSON --autodetect {project_id}:gtfs_static.json stops.json')
 
 
 from prefect_dbt.cli.commands import DbtCoreOperation, DbtCliProfile
