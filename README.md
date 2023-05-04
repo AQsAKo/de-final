@@ -7,11 +7,12 @@ data via [GTFS](https://gtfs.org/) api.
 This project aims to build an end-to-end orchestrated data pipeline. The pipeline will fetch bus data from wmata and save it locally, Then, the data will be uploaded to BigQuery with defined schemas and clustering. In BigQuery, DBT will be used to transform the data. Finally, the data will be visualised in a dashboard.
 
 ## Tech stack
-Docker, BigQuery, dbt, Looker Studio, Prefect
+Docker, Terraform, BigQuery, dbt, Looker Studio, Prefect
 
 ## Questions
 Visualize all the routes
-Show buses distribution by time of day (in 10 minute buckets), GTFS time can include more than 24 hours
+
+Show number of buses distribution by time of day (in 10 minute buckets), GTFS time can include more than 24 hours
 
 ## Dashboard
 <p align="center">
