@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+    - name: stage
+      database: final-385014
+      schema: gtfs_static
+      tables: 
+        - name: json 
+        - name: stop_times
+        - name: stops
+        - name: shapes
+
+models:
+    - name: stops
+    - name: routes
