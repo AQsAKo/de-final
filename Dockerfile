@@ -11,8 +11,8 @@ RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cl
 RUN tar -xf google-cloud-cli-429.0.0-linux-x86_64.tar.gz
 RUN ./google-cloud-sdk/install.sh -q
 RUN PATH=/home/final/google-cloud-sdk/bin:$PATH
-#RUN wget https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip 
-COPY terraform_1.4.6_linux_amd64.zip terraform_1.4.6_linux_amd64.zip
+RUN wget https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip 
+#COPY terraform_1.4.6_linux_amd64.zip terraform_1.4.6_linux_amd64.zip
 RUN unzip terraform_1.4.6_linux_amd64.zip -d /usr/bin
 
 RUN pip install tqdm
