@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+    prefect:
+        build: .
+        environment:
+            - GOOGLE_APPLICATION_CREDENTIALS=/home/final/secrets/final.json
+            - PREFECT_ACCOUNT_ID=${PREFECT_ACCOUNT_ID}
+            - PREFECT_WORKSPACE_ID=${PREFECT_WORKSPACE_ID}
+            - PREFECT_API_URL=https://api.prefect.cloud/api/accounts/${PREFECT_ACCOUNT_ID}/workspaces/${PREFECT_WORKSPACE_ID}
+            - PREFECT_API_KEY=${PREFECT_API_KEY}
+            - WMATA_KEY=${WMATA_KEY}
+        volumes:
+            - $GOOGLE_APPLICATION_CREDENTIALS:/home/final/secrets/final.json:ro
+
+#volumes:
+    #$GOOGLE_APPLICATION_CREDENTIALS:
+    #:/home/final/secrets/final.json:ro
