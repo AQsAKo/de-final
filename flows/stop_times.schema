@@ -1,0 +1,1 @@
+trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN

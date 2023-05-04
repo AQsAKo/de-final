@@ -1,0 +1,1 @@
+stop_id:NUMERIC,stop_code:INTEGER,stop_name:STRING,stop_desc:STRING,stop_lat:FLOAT,stop_lon:FLOAT,zone_id:NUMERIC,stop_url:STRING
