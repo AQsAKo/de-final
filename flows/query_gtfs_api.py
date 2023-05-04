@@ -48,20 +48,23 @@ def query_gtfs_api(api_key: str = os.environ['WMATA_KEY'], api_url: str = "https
 #'https://api.wmata.com/gtfs/bus-gtfs-static.zip'
 
 @task(log_prints=True, name="Unzip gtfs static data", retries=3)
-def unzip_file(content: bytes, extract_dir: Path="gtfs", retries=3)-> None:
+def unzip_file(content: bytes, extract_dir: Path="/home/final/gtfs", retries=3)-> None:
     
     print("unzipping........")
     try:
         with zipfile.ZipFile(io.BytesIO(content),"r") as zip_ref:
-            zip_ref.extractall(extract_dir)
+            zip_ref.extractall('/home/final/gtfs')
         print("Successfully unzip data.")
         #split large file for bq ingestion
-        os.system('tail -n +2 stop_times.txt | split -d --line-bytes=100M - stop_chunk_')
+        #os.system(f'cd /home/final/gtfs')
+        #os.system(f'tail -n +2 /home/final/gtfs/stop_times.txt | split -d --line-bytes=100M - stop_chunk_')
+        #os.system(f'cd ..')
+        os.system(f'bash splitter.sh')
     except BadZipfile:
         print("Wmata gtfs static data failed")
 
 @task(log_prints=True, name="Query Wmata API for json stops data", retries=3)
-def query_stops_json(api_key: str = os.environ['WMATA_KEY'], api_url: str = "https://api.wmata.com/Bus.svc/json/jStops", extract_dir: Path="gtfs") -> bytes:
+def query_stops_json(api_key: str = os.environ['WMATA_KEY'], api_url: str = "https://api.wmata.com/Bus.svc/json/jStops", extract_dir: Path="/home/final/gtfs") -> bytes:
 
     headers = {
         # Request headers
@@ -70,13 +73,13 @@ def query_stops_json(api_key: str = os.environ['WMATA_KEY'], api_url: str = "htt
 
     try:
         r = requests.get(api_url, headers = headers)
-        with codecs.open(f"{extract_dir}/stops.json", 'w', 'utf8') as f:
+        with codecs.open(f'/home/final/gtfs/stops.json', 'w', 'utf8') as f:
             f.write(json.dumps(r.json(), sort_keys=True, ensure_ascii=False))
     except requests.exceptions.RequestException as e:
         print("[Requests error ]", e)
     
 @task(log_prints=True, name="Query Wmata API for bus stops data", retries=3)
-def load_to_bq(extract_dir: Path="gtfs")->None:
+def load_to_bq(extract_dir: Path="/home/final/gtfs")->None:
     gcloud_bin = "/home/final/google-cloud-sdk/bin"
     os.system(f'{gcloud_bin}/bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_00 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
     os.system(f'{gcloud_bin}/bq load --source_format=CSV --clustering_fields=stop_sequence {project_id}:gtfs_static.stop_times {extract_dir}/stop_chunk_01 trip_id:NUMERIC,arrival_time:STRING,departure_time:STRING,stop_id:NUMERIC,stop_sequence:NUMERIC,stop_headsign:STRING,pickup_type:INTEGER,drop_off_type:INTEGER,shape_dist_traveled:FLOAT,timepoint:BOOLEAN')
@@ -84,7 +87,7 @@ def load_to_bq(extract_dir: Path="gtfs")->None:
     os.system(f'{gcloud_bin}/bq load --source_format=CSV --skip_leading_rows=1 --clustering_fields=shape_pt_sequence {project_id}:gtfs_static.shapes {extract_dir}/shapes.txt shape_id:STRING,shape_pt_lat:FLOAT,shape_pt_lon:FLOAT,shape_pt_sequence:NUMERIC,shape_dist_traveled:FLOAT')
     os.system(f'{gcloud_bin}/bq load --source_format=CSV --skip_leading_rows=1 {project_id}:gtfs_static.stops {extract_dir}/stops.txt stop_id:NUMERIC,stop_code:INTEGER,stop_name:STRING,stop_desc:STRING,stop_lat:FLOAT,stop_lon:FLOAT,zone_id:NUMERIC,stop_url:STRING')
 
-    os.system(f'{gcloud_bin}/bq load  --source_format=NEWLINE_DELIMITED_JSON --autodetect {project_id}:gtfs_static.json stops.json')
+    os.system(f'{gcloud_bin}/bq load  --source_format=NEWLINE_DELIMITED_JSON --autodetect {project_id}:gtfs_static.json {extract_dir}/stops.json')
 
 
 from prefect_dbt.cli.commands import DbtCoreOperation, DbtCliProfile

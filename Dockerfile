@@ -17,10 +17,11 @@ RUN unzip terraform_1.4.6_linux_amd64.zip -d /usr/bin
 
 RUN pip install tqdm
 ENV PATH="$PATH:/home/final/google-cloud-sdk/bin"
-
+RUN mkdir gtfs
 COPY terraform terraform
 COPY flows flows
 COPY wmata_bus wmata_bus
+COPY splitter.sh splitter.sh
 
 
 
