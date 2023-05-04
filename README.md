@@ -24,12 +24,6 @@ Show buses distribution by time of day (in 10 minute buckets), GTFS time can inc
 2. Clone project ```git clone https://github.com/AQsAKo/de-final.git```
 3. Install Docker
 4. In project directory run `docker-compose build`
-
-	- (Note) This may take a little time to process and if you see any prompts from updates, you can hit OK on the prompts and f for the MORE prompt 	   for the Anaconda setup
-	- After installation, run the following command to see if you installed GCP SDK correctly:
-        ```bash
-        gcloud -v
-        ``` 
 5. Start the built container with command `docker-compose run -rm prefect` 
     and initialize google cli with command `gcloud init` and login with your account and select project
 6. Execute Terraform code
