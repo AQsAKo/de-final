@@ -4,7 +4,7 @@
 WMATA ( Washington Metropolitan Area Transit Authority ) schedules buses and trains in Washington Metropolitan Area and provides
 data via [GTFS](https://gtfs.org/) api. 
 
-This project aims to build an end-to-end orchestrated data pipeline. The pipeline will fetch bus data from wmata and save it locally, Then, the data will be uploaded to BigQuery with defined schemas and clustering. In BigQuery, DBT will be used to transform the data. Finally, the data will be visualised in a dashboard.
+This project aims to build an end-to-end orchestrated data pipeline. The pipeline will fetch bus data from wmata and save it locally, Then, the data will be uploaded to BigQuery with defined schemas and clustering (by sequential fields `stop_sequence` and `shape_pt_sequence`). In BigQuery, DBT will be used to transform the data. Finally, the data will be visualised in a dashboard.
 
 ## Tech stack
 Docker, Terraform, BigQuery, dbt, Looker Studio, Prefect
@@ -24,7 +24,8 @@ Show number of buses distribution by time of day (in 10 minute buckets), GTFS ti
 1. Set up a GCP Environment account with the service account and project. 
 2. Clone project ```git clone https://github.com/AQsAKo/de-final.git```
 3. Install Docker
-4. Set variables ```bash
+4. Set variables 
+    ```bash
     export GOOGLE_APPLICATION_CREDENTIALS=<path_to_serviceaccount_json>
     export PREFECT_ACCOUNT_ID=<prefect-account-id>
     export PREFECT_WORKSPACE_ID=<prefect-workspace-id>
