@@ -9,6 +9,10 @@ This project aims to build an end-to-end orchestrated data pipeline. The pipelin
 ## Tech stack
 Docker, Terraform, BigQuery, dbt, Looker Studio, Prefect
 
+Architecture
+
+<img src="assets/architecture.drawio.png" width="800">
+
 ## Questions
 Visualize all the routes
 
