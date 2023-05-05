@@ -4,7 +4,8 @@
 WMATA ( Washington Metropolitan Area Transit Authority ) schedules buses and trains in Washington Metropolitan Area and provides
 data via [GTFS](https://gtfs.org/) api. 
 
-This project aims to build an end-to-end orchestrated data pipeline. The pipeline will fetch bus data from wmata and save it locally, Then, the data will be uploaded to BigQuery with defined schemas and clustering (by sequential fields `stop_sequence` and `shape_pt_sequence`). In BigQuery, DBT will be used to transform the data. Finally, the data will be visualised in a dashboard.
+This project aims to build an end-to-end orchestrated data pipeline. The pipeline will fetch bus data from wmata and save it locally, Then, the data will be uploaded to BigQuery using Google Cloud cli with defined schemas and clustering (by sequential fields `stop_sequence` and `shape_pt_sequence`). Tables are not partitioned as the data contains only one day data, but hours value can take values larger than 23, meaning the trip ends the next day.
+In BigQuery, DBT will be used to transform the data. Finally, the data will be visualised in a dashboard.
 
 ## Tech stack
 Docker, Terraform, BigQuery, dbt, Looker Studio, Prefect
@@ -16,7 +17,11 @@ Architecture
 ## Questions
 Visualize all the routes
 
-Show number of buses distribution by time of day (in 10 minute buckets), GTFS time can include more than 24 hours
+Show number of buses distribution by time of day (in 10 minute buckets).
+
+## Dataset
+Full description of gtfs static data is available at [GTFS](https://gtfs.org/). In this project stop_times.txt, shapes.txt, stops.txt and json
+file matching bus stops and routes are ingested. Shapes are used to build line geometry. Arrival time for every stop is used to count number of buses in 10 minute time buckets.
 
 ## Dashboard
 <p align="center">
@@ -28,7 +33,7 @@ Show number of buses distribution by time of day (in 10 minute buckets), GTFS ti
 1. Set up a GCP Environment account with the service account and project. 
 2. Clone project ```git clone https://github.com/AQsAKo/de-final.git```
 3. Install Docker
-4. Set variables 
+4. Set variables: for PREFECT values you should create Prefect Cloud account as described further, WMATA_KEY can be obtained after creating developer account at [Link](https://developer.wmata.com/signup/). Here hardcoded value is provided.
     ```bash
     export GOOGLE_APPLICATION_CREDENTIALS=<path_to_serviceaccount_json>
     export PREFECT_ACCOUNT_ID=<prefect-account-id>
@@ -37,8 +42,8 @@ Show number of buses distribution by time of day (in 10 minute buckets), GTFS ti
     export WMATA_KEY=8e2f2e3134924ca49be865340270bed6
     ```
     In project directory run `docker-compose build`
-5. Start the built container with command `docker-compose run -rm prefect` 
-    and initialize google cli with command `gcloud init` and login with your account and select project
+5. Start the built container with command `docker-compose run -rm prefect`, 
+   initialize google cli with command `gcloud init` and login with your account, then select the project
 6. Execute Terraform code
     - Change the directory to terraform folder containing the terraform configuration filester
       `cd terraform`
@@ -65,7 +70,7 @@ Show number of buses distribution by time of day (in 10 minute buckets), GTFS ti
 		- Edit `profiles.yml` file in dbt folder with location of your gcp resources (for example: europe-west1)
 		- Edit `schema.yml` file with your project name on database (database: "your project name")
 	- sign-up for the prefect cloud and create a workspace [here](https://app.prefect.cloud/auth/login)
-	-  Generate a new API key (if you dont have any) and keep it safe 
+	- Generate a new API key (if you dont have any) and keep it safe 
 		- click the icon at the bottom left corner
 		- click on the profile (your name)
 		- click on API Keys
